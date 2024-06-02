@@ -24,7 +24,8 @@ The example HTML can be opened in your web browser like this:
 ## Vagrant, Nginx
 
     cd ./vagrant
-    APP=nginx vagrant up
+    vagrant up
+    APP=nginx vagrant provision
 
 ## Vagrant, Caddy
 
@@ -64,12 +65,6 @@ The example HTML can be opened in your web browser like this:
 
 ## Docker-Compose, Caddy
 
-## Vagrant, Docker, Nginx
-
-## Vagrant, Docker, 
-
-## Terraform, Vagrant, Nginx
-
 ## Terraform, EC2, Nginx
 
 ## Terraform, EC2, Caddy
@@ -81,5 +76,4 @@ The example HTML can be opened in your web browser like this:
 ## Cloudformation, EC2, Nginx, S3
 
 ## Cloudformation, S3, Cloudfront
-
 
