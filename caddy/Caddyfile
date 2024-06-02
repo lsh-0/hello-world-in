@@ -1,0 +1,9 @@
+{
+    # disable Caddy's automatic certificate fetching
+    auto_https off
+}
+
+:80 {
+    root * /vagrant/html
+    file_server
+}

@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+APP = ENV["APP"]
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box_version = "202404.26.0"
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  config.vm.box_check_update = false
+
+  config.vm.network "forwarded_port", guest: 80, host: 1234
+
+  # the parent directory will be available as /vagrant within the guest VM
+  config.vm.synced_folder "../", "/vagrant"
+
+  # executed on every `vagrant provision`,
+  # it updates the system packages and
+  # resets the environment.
+  config.vm.provision("shell",
+    path: "bootstrap.sh", \
+    keep_color: true, \
+    privileged: true)
+
+  # if the `APP` environment variable has been set,
+  # for example, `APP=caddy vagrant provision`,
+  # then run the $appname.sh shell script,
+  # for example, `caddy.sh`.
+  if APP
+    config.vm.provision("shell",
+      path: "#{APP}.sh", \
+      keep_color: true, \
+      privileged: true, \
+      env: {'APP': APP})
+  end
+
+end
