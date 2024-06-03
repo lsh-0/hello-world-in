@@ -77,6 +77,10 @@ The example HTML can be opened in your web browser like this:
 
 ## Docker, Caddy
 
+    cd ./docker
+    ./build.sh caddy
+    ./run.sh caddy
+
 ## Docker, Python
 
 ## Docker, Go

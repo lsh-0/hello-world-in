@@ -3,4 +3,4 @@ set -euxv
 
 app="$1"
 
-docker build --file "Docker.$app" --rm --tag "hello-world/$app" .
+docker build --file "Dockerfile.$app" --rm --tag "hello-world/$app" .
