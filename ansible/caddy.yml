@@ -1,0 +1,45 @@
+- name: install, enable, configure and start a Caddy webserver
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: no
+        pkg:
+          - debian-keyring
+          - debian-archive-keyring
+          - apt-transport-https
+          - curl
+
+    - name: caddy gpg key
+      ansible.builtin.command: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+      args:
+        creates: "/usr/share/keyrings/caddy-stable-archive-keyring.gpg"
+
+    - name: caddy apt pkg source
+      ansible.builtin.command: curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
+      args:
+        creates: "/etc/apt/sources.list.d/caddy-stable.list"
+
+    - name: install caddy
+      ansible.builtin.apt:
+        update_cache: yes
+        name: caddy
+        state: present
+
+    - name: remove the default welcome page
+      ansible.builtin.file:
+        path: /etc/caddy/Caddyfile
+        state: absent
+    
+    - name: link in the ./html directory on the host
+      ansible.builtin.copy:
+        src: /vagrant/caddy/Caddyfile 
+        dest: /etc/caddy/
+
+    - name: start/restart the server
+      ansible.builtin.service:
+        name: caddy
+        state: started
+        enabled: yes
+

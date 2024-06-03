@@ -20,8 +20,7 @@ function stop_service() {
     fi
 }
 
-# stop and disable any services that may have been enabled on a previous provision
-
+# stop and disable any services that may have been enabled on a previous `vagrant provision`
 stop_service salt-minion
 stop_service caddy
 stop_service nginx

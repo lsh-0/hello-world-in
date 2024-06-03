@@ -65,6 +65,10 @@ The example HTML can be opened in your web browser like this:
 
 ## Vagrant, Ansible, Caddy
 
+    cd ./vagrant
+    vagrant up
+    APP=ansible,caddy vagrant provision
+
 ## Docker, Nginx
 
 ## Docker, Caddy
