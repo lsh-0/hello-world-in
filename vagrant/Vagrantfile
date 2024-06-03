@@ -46,12 +46,12 @@ Vagrant.configure("2") do |config|
 
   if ANSIBLE
     config.vm.provision("shell",
-      path: "salt.sh", \
+      path: "ansible.sh", \
       keep_color: true, \
       privileged: true, \
       env: {'APP': APP})
 
-    APP="#{APP}-salt" # "nginx" becomes "nginx-ansible", etc
+    APP="#{APP}-ansible" # "nginx" becomes "nginx-ansible", etc
   end
 
   # if the `APP` environment variable has been set,

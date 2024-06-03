@@ -1,0 +1,31 @@
+- name: install, enable, configure and start an nginx webserver
+  hosts: all
+  become: true
+
+  tasks:
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: no
+
+    - name: remove the default welcome page
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: link in the ./html directory on the host
+      ansible.builtin.copy:
+        src: /vagrant/nginx/default.conf
+        dest: /etc/nginx/sites-enabled/default.conf
+
+    - name: test the config
+      ansible.builtin.command:
+        cmd: nginx -t
+
+    - name: start/restart the server
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
