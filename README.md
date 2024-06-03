@@ -71,6 +71,10 @@ The example HTML can be opened in your web browser like this:
 
 ## Docker, Nginx
 
+    cd ./docker
+    ./build.sh nginx
+    ./run.sh nginx
+
 ## Docker, Caddy
 
 ## Docker, Python
