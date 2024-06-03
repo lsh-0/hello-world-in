@@ -11,7 +11,7 @@ func main() {
 	port := flag.Int("port", 1234, "port to listen on")
 	flag.Parse()
 
-	address := fmt.Sprintf(":%d", *port)
+	address := fmt.Sprintf(":%d", *port) // ":1234", ":80"
 
 	fmt.Printf("listening on port %d, ctrl-c to quit ...\n", *port)
 	err := http.ListenAndServe(address, http.FileServer(http.Dir("../html")))

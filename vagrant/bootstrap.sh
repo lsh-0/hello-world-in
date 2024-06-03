@@ -22,6 +22,7 @@ function stop_service() {
 
 # stop and disable any services that may have been enabled on a previous provision
 
+stop_service salt-minion
 stop_service caddy
 stop_service nginx
 stop_service python-webserver

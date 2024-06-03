@@ -2,10 +2,19 @@
 # vi: set ft=ruby :
 
 APP = ENV["APP"]
+SALT = false
+ANSIBLE = false
+
+bits = APP ? APP.split(",") : []
+if bits.length == 2
+    APP = bits[1]
+    SALT = bits[0] == "salt"
+    ANSIBLE = bits[0] == "ansible"
+end
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-24.04"
-  config.vm.box_version = "202404.26.0"
+  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.box_version = "202404.23.0"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -24,6 +33,26 @@ Vagrant.configure("2") do |config|
     path: "bootstrap.sh", \
     keep_color: true, \
     privileged: true)
+
+  if SALT
+    config.vm.provision("shell",
+      path: "salt.sh", \
+      keep_color: true, \
+      privileged: true, \
+      env: {'APP': APP})
+
+    APP="#{APP}-salt" # "nginx" becomes "nginx-salt", etc
+  end
+
+  if ANSIBLE
+    config.vm.provision("shell",
+      path: "salt.sh", \
+      keep_color: true, \
+      privileged: true, \
+      env: {'APP': APP})
+
+    APP="#{APP}-salt" # "nginx" becomes "nginx-ansible", etc
+  end
 
   # if the `APP` environment variable has been set,
   # for example, `APP=caddy vagrant provision`,
