@@ -3,6 +3,8 @@ set -euxv
 
 app="$1"
 
+docker build --file "Dockerfile.$app" --rm --tag "hello-world/$app" .
+
 if test "$app" = "nginx"; then
     docker run \
         --rm \

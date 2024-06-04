@@ -72,25 +72,21 @@ The example HTML can be opened in your web browser like this:
 ## Docker, Nginx
 
     cd ./docker
-    ./build.sh nginx
     ./run.sh nginx
 
 ## Docker, Caddy
 
     cd ./docker
-    ./build.sh caddy
     ./run.sh caddy
 
 ## Docker, Python
 
     cd ./docker
-    ./build.sh python
     ./run.sh python
 
 ## Docker, Go
 
     cd ./docker
-    ./build.sh go
     ./run.sh go
 
 ## Docker-Compose, Nginx
