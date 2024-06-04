@@ -1,0 +1,41 @@
+services:
+    nginx:
+        build:
+            dockerfile: Dockerfile.nginx
+        image: hello-world/nginx
+        container_name: hello-world-nginx
+        ports:
+            - "1234:80"
+        volumes:
+            - ../html:/usr/share/nginx/html
+
+    caddy:
+        build:
+            dockerfile: Dockerfile.caddy
+        image: hello-world/caddy
+        container_name: hello-world-caddy
+        ports:
+            - "1234:80"
+        volumes:
+            - ../html:/usr/share/caddy
+
+    python:
+        build:
+            dockerfile: Dockerfile.python
+        image: hello-world/python
+        container_name: hello-world-python
+        ports:
+            - "1234:80"
+        volumes:
+            - ../html:/tmp/html
+
+    go:
+        build:
+            dockerfile: Dockerfile.go
+        image: hello-world/go
+        container_name: hello-world-go
+        ports:
+            - "1234:80"
+        volumes:
+            - ../html:/tmp/html
+            - ../go:/tmp/hello-world-go

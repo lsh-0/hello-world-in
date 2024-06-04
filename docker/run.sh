@@ -8,7 +8,7 @@ if test "$app" = "nginx"; then
         --rm \
         --name "hello-world-$app" \
         --publish 1234:80 \
-        --volume $(realpath ../html):/usr/share/nginx/html:ro \
+        --volume $(realpath ../html):/usr/share/nginx/html \
         "hello-world/$app"
     exit 0
 

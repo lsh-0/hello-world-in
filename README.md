@@ -95,7 +95,23 @@ The example HTML can be opened in your web browser like this:
 
 ## Docker-Compose, Nginx
 
+    cd ./docker
+    docker compose up nginx
+
 ## Docker-Compose, Caddy
+
+    cd ./docker
+    docker compose up caddy
+
+## Docker-Compose, Python
+
+    cd ./docker
+    docker compose up python
+
+## Docker-Compose, Go
+
+    cd ./docker
+    docker compose up go
 
 ## Terraform, EC2, Nginx
 
