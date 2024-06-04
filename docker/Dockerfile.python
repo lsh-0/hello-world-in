@@ -1,0 +1,2 @@
+FROM python:3.12-alpine
+ENTRYPOINT ["python3", "-m", "http.server", "-d", "/tmp/html", "80"]

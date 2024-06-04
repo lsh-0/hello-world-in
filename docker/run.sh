@@ -21,6 +21,26 @@ elif test "$app" = "caddy"; then
         "hello-world/$app"
     exit 0
 
+elif test "$app" = "python"; then
+    docker run \
+        --rm \
+        --name "hello-world-$app" \
+        --publish 1234:80 \
+        --volume $(realpath ../html):/tmp/html \
+        "hello-world/$app"
+    exit 0
+
+elif test "$app" = "go"; then
+    docker run \
+        --rm \
+        --name "hello-world-$app" \
+        -it \
+        --publish 1234:80 \
+        --volume $(realpath ../html):/tmp/html \
+        --volume $(realpath ../go):/tmp/hello-world-go \
+        "hello-world/$app"
+    exit 0
+
 fi
 
 echo "unknown app: $app"
