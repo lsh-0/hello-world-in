@@ -130,7 +130,7 @@ Clean up with `terraform destroy`.
     cd ./terraform
     terraform init
     terraform plan -var-file terraform.tfvars -out terraform.plan
-    terraform apply -var-file terraform.tfvars
+    terraform apply -var-file terraform.tfvars terraform.plan
     terraform output -json > outputs.json
     go run . --outputs-file outputs.json --app nginx
     xdg-open "http://$(cat outputs.json | jq .public_ip.value -r)"
