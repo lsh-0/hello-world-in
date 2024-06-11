@@ -109,15 +109,46 @@ The example HTML can be opened in your web browser like this:
     cd ./docker
     docker compose up go
 
+---
+
+The below examples copy the `./html` directory remotely however changes are not reflected automatically.
+
+Set the `region` and `vpc_id` variables in a file called `terraform.tfvars`.
+
+If your `region` isn't `us-east-1` or `ap-southeast-2`, you'll need to modify the `ami_map` in `variables.tf`.
+
+Create a keypair for these ec2 instances:
+
+    ssh-keygen -f key -N ''
+
+If you call it something other than `key` you'll need to update `terraform.tfvars`.
+
+Clean up with `terraform destroy`.
+
 ## Terraform, EC2, Nginx
 
+    cd ./terraform
+    terraform init
+    terraform plan -var-file terraform.tfvars -out terraform.plan
+    terraform apply -var-file terraform.tfvars
+    terraform output -json > outputs.json
+    go run . --outputs-file outputs.json --app nginx
+    xdg-open "http://$(cat outputs.json | jq .public_ip.value -r)"
+
 ## Terraform, EC2, Caddy
+
+## Terraform, EC2, Ansible, Nginx
+
+## Terraform, EC2, Ansible, Caddy
 
 ## Cloudformation, EC2, Nginx
 
 ## Cloudformation, EC2, Caddy
 
-## Cloudformation, EC2, Nginx, S3
+## Others
 
-## Cloudformation, S3, Cloudfront
-
+* k8s?
+* lambda?
+* ecs?
+* static website? with cloudfront?
+* alb?

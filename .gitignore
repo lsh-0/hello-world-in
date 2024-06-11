@@ -1,3 +1,13 @@
 *~
 vagrant/.vagrant
 go/web
+terraform/.tfenv
+terraform/.terraform
+terraform/terraform.plan
+terraform/terraform.state
+terraform/terraform.tfstate*
+terraform/terraform.tfvars
+terraform/.terraform.lock.hcl
+terraform/key*
+terraform/outputs*
+terraform/helper
