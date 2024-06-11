@@ -137,6 +137,14 @@ Clean up with `terraform destroy`.
 
 ## Terraform, EC2, Caddy
 
+    cd ./terraform
+    terraform init
+    terraform plan -var-file terraform.tfvars -out terraform.plan
+    terraform apply terraform.plan
+    terraform output -json > outputs.json
+    go run . --outputs-file outputs.json --app caddy
+    xdg-open "http://$(cat outputs.json | jq .public_ip.value -r)"
+
 ## Terraform, EC2, Ansible, Nginx
 
 ## Terraform, EC2, Ansible, Caddy

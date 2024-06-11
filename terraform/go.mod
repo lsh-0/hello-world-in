@@ -3,6 +3,7 @@ module helper
 go 1.21.6
 
 require (
+	github.com/alessio/shellescape v1.4.2
 	github.com/melbahja/goph v1.4.0
 	golang.org/x/crypto v0.6.0
 )

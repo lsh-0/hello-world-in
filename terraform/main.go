@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/alessio/shellescape"
 	"github.com/melbahja/goph"
 	"golang.org/x/crypto/ssh"
 )
@@ -33,8 +34,9 @@ type Client struct {
 
 // like `goph.Client.Run`, but command is executed as `username` using `sudo -u`.
 func (c *Client) RunAs(username string, cmd string) ([]byte, error) {
-	final_cmd := fmt.Sprintf("sudo -u %s %s", username, cmd)
-	slog.Info("running command", "cmd", cmd, "as", username)
+	esc := shellescape.Quote(cmd)
+	final_cmd := fmt.Sprintf("sudo -u %s /bin/bash -c %s", username, esc)
+	slog.Info("running command", "as", username, "cmd", cmd) //, "final", final_cmd)
 	return c.Run(final_cmd)
 }
 
@@ -157,16 +159,22 @@ func upload_html(client *Client, html_dir string) ([]byte, error) {
 		if err != nil {
 			return resp, err
 		}
+
+		// because permissions are not preserved during upload (yet?),
+		// ensure those in the www-data group (like vagrant, ubuntu, caddy) can read these files.
+		resp, err = client.RunAs("root", fmt.Sprintf("chmod g+r %s", remote_path))
+		if err != nil {
+			return resp, err
+		}
 	}
 
 	return empty_resp, nil
 }
 
-// essentially the ad-hoc shell scripts you can find in ./hello-world/vagrant/
+// essentially the ad-hoc shell scripts you can find in `./hello-world/vagrant/`.
 // those scripts rely on a shared directory being present (/vagrant) to
 // access the app's config.
-// no such guarantee with a remote VM.
-// we could upload a copy of everything, but urgh.
+// no such thing with a remote VM.
 func execute_app(client *Client, app_name string) ([]byte, error) {
 
 	empty_resp := []byte{}
@@ -199,6 +207,43 @@ func execute_app(client *Client, app_name string) ([]byte, error) {
 		if err != nil {
 			return output, fmt.Errorf("failed to restart nginx: %w", err)
 		}
+
+	case "caddy":
+		output, err := client.RunAllAs("root", []string{
+			"/usr/bin/apt install debian-keyring debian-archive-keyring apt-transport-https curl  --assume-yes",
+			"rm -f /usr/share/keyrings/caddy-stable-archive-keyring.gpg",
+			"curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/gpg.key | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg",
+			"curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt > /etc/apt/sources.list.d/caddy-stable.list",
+			"apt update",
+			"apt install caddy --assume-yes",
+			"rm -f /etc/caddy/Caddyfile",
+			// caddy doesn't create the /var/www/ dir.
+			// it also doesn't run as www-data.
+			// add the caddy user to www-data group.
+			"mkdir -p /var/www/html",
+			"chown -R www-data:www-data /var/www/*",
+			"usermod -aG www-data ubuntu",
+			"usermod -aG www-data caddy",
+		})
+		if err != nil {
+			return output, err
+		}
+
+		conf := filepath.Join(root, "caddy", "Caddyfile")
+		remote_conf := "/etc/caddy/Caddyfile"
+		output, err = client.UploadAs("caddy", conf, remote_conf)
+		if err != nil {
+			return output, fmt.Errorf("failed to upload Caddy config: %w", err)
+		}
+
+		output, err = client.RunAllAs("root", []string{
+			"caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile",
+			"systemctl restart caddy",
+		})
+		if err != nil {
+			return output, fmt.Errorf("failed to restart caddy: %w", err)
+		}
+
 	}
 
 	return empty_resp, nil
@@ -303,8 +348,10 @@ func main() {
 
 	// ---
 
+	var resp []byte
+
 	slog.Info("running bootstrap")
-	resp, err := bootstrap(client)
+	resp, err = bootstrap(client)
 	if err != nil {
 		print_response(resp)
 		exit("failed to execute bootstrap script: %v", err)
