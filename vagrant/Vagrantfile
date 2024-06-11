@@ -26,6 +26,9 @@ Vagrant.configure("2") do |config|
   # the parent directory will be available as /vagrant within the guest VM
   config.vm.synced_folder "../", "/vagrant"
 
+  # serving html from /var/www/html is more idiomatic and works across VMs
+  config.vm.synced_folder "../html", "/var/www/html"
+
   # executed on every `vagrant provision`,
   # it updates the system packages and
   # resets the environment.

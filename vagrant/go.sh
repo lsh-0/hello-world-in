@@ -14,6 +14,11 @@ if ! id www-data; then
     chown -R www-data:www-data /var/www
 fi
 
+(
+    cd /vagrant/go
+    go build .
+)
+
 # systemd service file
 cp /vagrant/go/go-webserver.service /lib/systemd/system/
 

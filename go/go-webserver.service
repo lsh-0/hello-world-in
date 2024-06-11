@@ -7,8 +7,7 @@ Requires=network-online.target
 Type=simple
 User=www-data
 Group=www-data
-WorkingDirectory=/vagrant/go
-ExecStart=/usr/bin/go run . --port 80
+ExecStart=/vagrant/go/web --port 80 --path /var/www/html
 ProtectSystem=full
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 
