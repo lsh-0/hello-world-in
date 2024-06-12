@@ -111,27 +111,29 @@ func (c *Client) UploadExecuteScriptAs(username string, script_path string, remo
 	return output, nil
 }
 
+/* // untested
 // given a shell `script` as a string,
 // write it to a temporary file and upload it to `remote_path`
 // make the script executable,
 // return the output of the script and any error.
-func (c *Client) RunScriptAs(username string, script string, remote_path string) ([]byte, error) {
-	empty_result := []byte{}
 
-	fh, err := os.CreateTemp(os.TempDir(), "")
-	if err != nil {
-		return empty_result, err
+	func (c *Client) RunScriptAs(username string, script string, remote_path string) ([]byte, error) {
+		empty_result := []byte{}
+
+		fh, err := os.CreateTemp(os.TempDir(), "")
+		if err != nil {
+			return empty_result, err
+		}
+		defer fh.Close()
+
+		_, err = fh.WriteString(script)
+		if err != nil {
+			return empty_result, fmt.Errorf("failed to write script to temporary file: %w", err)
+		}
+
+		return c.UploadExecuteScriptAs("root", fh.Name(), remote_path)
 	}
-	defer fh.Close()
-
-	_, err = fh.WriteString(script)
-	if err != nil {
-		return empty_result, fmt.Errorf("failed to write script to temporary file: %w", err)
-	}
-
-	return c.UploadExecuteScriptAs("root", fh.Name(), remote_path)
-}
-
+*/
 func print_response(resp []byte) {
 	fmt.Println("---")
 	fmt.Println(string(resp))
