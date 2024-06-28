@@ -1,9 +1,11 @@
 #!/bin/bash
+# run as a regular user.
+# assumes regular user can run `docker` commands.
 set -euxv
 
 app="$1"
 
-docker build --file "Dockerfile.$app" --rm --tag "hello-world/$app" .
+./build.sh "$app"
 
 if test "$app" = "nginx"; then
     docker run \

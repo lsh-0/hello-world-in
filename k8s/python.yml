@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-python
+  template:
+    metadata:
+      labels:
+        app: hello-world-python
+    spec:
+      containers:
+      - name: hello-world-python
+        image: hello-world/python:latest
+        imagePullPolicy: Never # do not pull this image from remote repository, always use locally built image.
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: local
+          mountPath: /tmp/html
+      volumes:
+      - name: local
+        hostPath:
+            path: /html
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-python
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-world-python
+  ports:
+  - protocol: TCP
+    port: 1234
+    targetPort: 80
+

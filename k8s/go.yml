@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-go
+  template:
+    metadata:
+      labels:
+        app: hello-world-go
+    spec:
+      containers:
+      - name: hello-world-go
+        image: hello-world/go:latest
+        imagePullPolicy: Never # do not pull this image from remote repository, always use locally built image.
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /tmp/html
+        - name: go
+          mountPath: /tmp/hello-world-go
+      volumes:
+      - name: html
+        hostPath:
+            path: /html
+      - name: go
+        hostPath:
+            path: /go
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-go
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-world-go
+  ports:
+  - protocol: TCP
+    port: 1234
+    targetPort: 80
+

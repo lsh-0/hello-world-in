@@ -109,7 +109,43 @@ The example HTML can be opened in your web browser like this:
     cd ./docker
     docker compose up go
 
----
+# k8s/minikube
+
+The examples below assume `minikube` is installed.
+
+Docker images are built locally and then loaded into minikube.
+
+Shared directories, like `./html`, are mounted inside `minikube`.
+
+Use this to determine the URL and fetch the result:
+
+    minikube service hello-world-$app --url
+
+For example:
+
+    curl $(minikube service hello-world-python --url)
+
+Use these to debug problems with deployments and individual pods:
+
+    kubectl describe deployment python
+    kubectl describe pod
+
+## k8s, Python
+
+    cd ./k8s
+    ./load-image.sh python
+    minikube mount ../html:/html &
+    kubectl apply -f python.yml
+
+## k8s, Go
+
+    cd ./k8s
+    ./load-image.sh go
+    minikube mount ../html:/html &
+    minikube mount ../go:/go &
+    kubectl apply -f go.yml
+
+# AWS EC2
 
 The below examples copy the `./html` directory remotely however changes are not reflected automatically.
 
