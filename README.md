@@ -125,11 +125,6 @@ For example:
 
     curl $(minikube service hello-world-python --url)
 
-Use these to debug problems with deployments and individual pods:
-
-    kubectl describe deployment python
-    kubectl describe pod
-
 ## k8s, Python
 
     cd ./k8s

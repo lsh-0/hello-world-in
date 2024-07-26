@@ -20,9 +20,9 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: html
-          mountPath: /tmp/html
+          mountPath: /tmp/html # minikube mount path
         - name: go
-          mountPath: /tmp/hello-world-go
+          mountPath: /tmp/hello-world-go  # minikube mount path
       volumes:
       - name: html
         hostPath:
