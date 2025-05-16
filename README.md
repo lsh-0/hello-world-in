@@ -186,6 +186,7 @@ Clean up with `terraform destroy`.
 
 ## Others
 
+* cloud-init!
 * k8s?
 * lambda?
 * ecs?
